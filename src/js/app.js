@@ -332,11 +332,11 @@
             .filter(m => m.stars.length > 0)
             .sort((a, b) => a.name?.localeCompare(b?.name || "") || 0);
 
-        let allMoments = stars.map(s => s.getStarMoment).concat([moment("" + year + "-12-25T00:00:00-0000")]);
+        let allMoments = stars.map(s => s.getStarMoment).concat([moment("" + year + "-12-12T00:00:00-0000")]);
         let maxMoment = moment.min([moment.max(allMoments), moment("" + year + "-12-31T00:00:00-0000")]);
 
         const maxDeltaPoints = members.filter(m => m.deltas.length > 0).length;
-        for (let i = 1; i <= 25; i++) {
+        for (let i = 1; i <= 12; i++) {
             let availableDeltaPoints = maxDeltaPoints;
             const sortedDeltas = deltas.filter(d => d.dayNr === i).sort((a,b) => a.deltaTimeTakenSeconds - b.deltaTimeTakenSeconds);
             for (let delta of sortedDeltas) {
@@ -347,7 +347,7 @@
 
         let availablePoints = {};
 
-        for (let i = 1; i <= 25; i++) {
+        for (let i = 1; i <= 12; i++) {
             availablePoints[i] = {};
             for (let j = 1; j <= 2; j++) {
                 availablePoints[i][j] = n_members;
@@ -754,7 +754,7 @@
         withXTickingScale() {
             let x = this.scales.x;
             x.min = 0;
-            x.max = 25;
+            x.max = 12;
             x.ticks = {
                 color: aocColors["main"],
                 stepSize: 1,
@@ -766,6 +766,7 @@
             let x = this.scales.x;
             x.type = "time";
             x.time = {
+                unit: 'day',
                 displayFormats: {
                     day: 'D',
                 },
@@ -774,8 +775,8 @@
                 color: aocColors["main"],
                 stepSize: 1,
             };
-            x.min = moment([data.year, 10, 30, 17, 0, 0]);
-            x.max = moment([data.year, 11, xMax || 31, 4, 0, 0]);
+            x.min = moment([data.year, 11, 1, 0, 0, 0]);
+            x.max = moment([data.year, 11, xMax || 31, 23, 59, 59]);
             x.title.text = titleText;
             return this;
         }
@@ -1354,7 +1355,7 @@
             let grid = data.members;
 
             let tr = gridElement.appendChild(document.createElement("tr"));
-            for (let d = 0; d <= 25; d++) {
+            for (let d = 0; d <= 12; d++) {
                 let td = tr.appendChild(document.createElement("td"));
                 td.innerText = d === 0 ? "" : d.toString();
                 td.align = "center";
@@ -1382,7 +1383,7 @@
                 td.style.border = "1px solid #333";
                 td.style.padding = "2px 8px";
 
-                for (let d = 1; d <= 25; d++) {
+                for (let d = 1; d <= 12; d++) {
                     let td = tr.appendChild(document.createElement("td"));
                     td.style.backgroundColor = cellColor;
                     td.style.border = "1px solid #333";
@@ -1549,7 +1550,7 @@
                     hidden: data.loggedInUserIsPresumablyKnown ? !member.isLoggedInUser : idx >= 3,
                 };
 
-                for (let i = 1; i <= 25; i++) {
+                for (let i = 1; i <= 12; i++) {
                     let star1 = data.stars.find(s => s.memberId === member.id && s.dayNr === i && s.starKey === "1");
                     let star2 = data.stars.find(s => s.memberId === member.id && s.dayNr === i && s.starKey === "2");
 
@@ -1577,7 +1578,7 @@
             let chart = new Chart(element.getContext("2d"), {
                 type: "bar",
                 data: {
-                    labels: range(1, 26),
+                    labels: range(1, 13),
                     datasets: datasets,
                 },
                 options,
@@ -1721,7 +1722,7 @@
                             },
                         },
                     })
-                    .withXTimeScale(data, { xMax: 25 })
+                    .withXTimeScale(data, { xMax: 12 })
                     .withYScale({
                         ticks: {
                             min: 0,
@@ -1820,3 +1821,4 @@
     }
 
 }(window["aoc"] = window["aoc"] || {}));
+
